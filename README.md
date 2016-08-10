@@ -12,3 +12,5 @@ For example, using *20,000 Leagues Under the Sea* as the corpus, these are some 
 * Captain Baker thought at first struck by a thunderbolt.
 * It was evidently propelled by her own momentum.
 * But the idea of seizing the Nautilus towards the Island of Crespo.
+
+Of course these sentences are quite nonsensical and often do not follow gramatical structure, but nonetheless they are interesting for even resembling human writing at all.
