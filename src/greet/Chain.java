@@ -2,6 +2,7 @@ package greet;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -52,34 +53,76 @@ public class Chain
 		
 	}
 	
+	// CONFIG
+	
+	public static final int COULD_NOT_READ_INPUT_ERROR = 1;
+	public static final int FILE_ALREADY_EXISTS_ERROR = 2;
+	public static final int COULD_NOT_WRITE_OUTPUT_ERROR = 3;
+	
+	public static final String INPUT_FILE_PATH = "examples\\corups_20000_leagues_under_the_sea.txt";
+	public static final String OUTPUT_FILE_PATH = "examples\\output_20000_leagues_under_the_sea.txt";
+	
+	public static final int DEFAULT_WORDS_TO_GENERATE = 1000;
+	
+	// END CONFIG
+	
 	public static void main(String[] args) throws IOException
 	{
-		File f = new File("C:\\Users\\Davis\\cermony.txt");
-		FileReader fr = new FileReader(f);
+		File f = new File(INPUT_FILE_PATH);
+		FileReader fr = null;
 		String text = "";
-		int a;
-		int numChars = 0;
-		int maxChars = 200000;
-		while ((a = fr.read()) != -1 && numChars <= maxChars)
-		{
-			String s = ""+(char) a;
-			text += s;
-			numChars++;
+		try {
+			fr = new FileReader(f);
+			text = "";
+			int a;
+			int numChars = 0;
+			int maxChars = 200000;
+			while ((a = fr.read()) != -1 && numChars <= maxChars)
+			{
+				String s = ""+(char) a;
+				text += s;
+				numChars++;
+			}
+		} catch (IOException e) {
+			System.err.println("Could not read file at path: " + INPUT_FILE_PATH);
+			System.exit(COULD_NOT_READ_INPUT_ERROR);
+		} finally {
+			if (fr != null) {
+				fr.close();
+			}
 		}
-		Chain c = new Chain(2, text);
-		String[] texta = c.genText(1000);
+		// check if the file exists BEFORE making the Chain (b/c otherwise the CPU time making the chain could be wasted)
+		File fileToWriteTo = new File(OUTPUT_FILE_PATH);
+		if (fileToWriteTo.exists()) { // don't write to existing files
+			System.err.println("File already exists at path: " + OUTPUT_FILE_PATH + " Chain will not overwrite existing files.");
+			System.exit(FILE_ALREADY_EXISTS_ERROR);
+		}
+		Chain c = new Chain(2, text); // build Markov Chain off of the corpus
+		String[] texta = c.genText(DEFAULT_WORDS_TO_GENERATE); // generate some number of words using the Markov Chain
 		String full = "";
 		for ( int i = 0; i < texta.length; i++)
 		{
 			full+=texta[i]+" ";
 		}
-		String[] splits = full.split("[\\!|\\?|\\.]");
-		for (int i = 0; i < splits.length; i++)
-		{
-			System.out.println(splits[i]+".");
-			System.out.println();
+		// replace quotes because they don't work out right (the chain has no idea that something started with quotes so it often forgets to end them)
+		full = full.replace("\"", "");
+		String[] splits = full.split("[\\!|\\?|\\.]"); // split into sentences (b/c the chain doesn't have any idea about paragraphs -> this makes it format nicer)
+		FileWriter fw = null;
+		try { // write to file
+			fw = new FileWriter(OUTPUT_FILE_PATH); // write to the output file path
+			for (int i = 1; i < splits.length - 1; i++) // start at one to skip the sentence fragment (and the last one is just a '.' so skip it too)
+			{
+				fw.write(splits[i].substring(1)); // substring removes preceeding space (' ')
+				fw.write(".\n");
+			}
+		} catch (IOException e) {
+			System.err.println("Could not write to file at path: " + OUTPUT_FILE_PATH);
+			System.exit(COULD_NOT_WRITE_OUTPUT_ERROR);
+		} finally {
+			if (fw != null) {
+				fw.close();
+			}
 		}
-		fr.close();
 	}
 	
 	private int o; // Order of the Chain i.e. number of words per key.
