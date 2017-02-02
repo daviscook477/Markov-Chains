@@ -138,7 +138,7 @@ public class Chain
 		
 		// The Markov Chain's pairs of keys and values. Built with a starting capacity that is the maximum number of
 		// key values pairs that could exist.
-		// Note that large of a starting capacity is excessive. TODO: Find better estimator.
+		// Note that large of a starting capacity is excessive.
 		ArrayList<Pair> pairs = new ArrayList<Pair>(maxNumPairs(order, elems.length));
 		
 		// Build a Markov Chain from the input.
@@ -234,7 +234,7 @@ public class Chain
 		{
 			return null;
 		}
-		// Get a RNGESUS
+		// Get a RNG
 		Random rand = new Random();
 		// Get a starting word by choosing a random key-value pair and selecting the words of the key to start.
 		int randint = rand.nextInt(p.size());
@@ -268,7 +268,7 @@ public class Chain
 			// Next the past index is just set to the index of this new key. This new key is basically being found in the list
 			// of all keys that existed in the text and then being given back its index.
 			pastIndex=indexKeyExists(p, newKeys);
-			// The index has to bee increased. TODO: honestly this should be done with i; not some currentWordIndex.
+			// The index has to be increased.
 			currentWordIndex++;
 		}
 		return text;
