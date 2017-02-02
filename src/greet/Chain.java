@@ -202,37 +202,6 @@ public class Chain
 			}
 		}
 		
-		/*
-		// Print it out. For debugging.
-		for (int i = 0; i < pairs.size(); i++)
-		{
-			Pair p = pairs.get(i);
-			String[] key = p.keys;
-			ArrayList<WordCount> value = p.wordCounts;
-			boolean display = false;
-			if (value.size() > 1) {display = true;}
-			for (int j = 0; j < value.size(); j++)
-			{
-				WordCount val = value.get(j);
-				if (val.count > 1) { display = true; }
-			}
-			if (display)
-			{
-				System.out.print("KEY: ");
-				for (int j = 0; j < key.length; j++)
-				{
-					System.out.print(key[j] + " ");
-				}
-				System.out.print(". VALUES: ");
-				for (int j = 0; j < value.size(); j++)
-				{
-					WordCount val = value.get(j);
-					System.out.print(val.word + ", " + val.count + " ");
-				}
-				System.out.println();
-			}
-		}*/
-		
 		// Save the order and pairs in case they will ever be used again - not likely.
 		o = order;
 		p = pairs;
@@ -383,7 +352,5 @@ public class Chain
 		String regex = "\\s+"; // Regular expression for spaces.
 		return input.split(regex); // Split the input string at the regex i.e. separate by spaces.
 	}
-
-	
 	
 }
